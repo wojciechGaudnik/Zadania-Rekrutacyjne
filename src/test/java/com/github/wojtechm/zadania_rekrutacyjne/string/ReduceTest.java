@@ -70,6 +70,8 @@ public class ReduceTest {
                 {"abba", ""},
                 {"abcddcba", ""},
                 {"fabcddcbaz", "fz"},
+                {"wo11od", "wd"},
+                {"xwoowabbax", ""}
         };
     }
 }
