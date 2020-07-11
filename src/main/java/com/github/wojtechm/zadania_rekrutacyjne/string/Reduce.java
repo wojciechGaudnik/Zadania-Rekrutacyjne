@@ -40,7 +40,6 @@ class Reduce {
                 stack.push(c);
             }
         }
-
         return new StringBuilder(stack.stream().map(String::valueOf).collect(Collectors.joining())).reverse().toString();
     }
 
