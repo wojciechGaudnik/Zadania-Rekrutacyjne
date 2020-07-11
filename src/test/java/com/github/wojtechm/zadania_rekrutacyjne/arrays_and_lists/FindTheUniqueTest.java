@@ -84,5 +84,7 @@ public class FindTheUniqueTest {
         for (int j = 0; j < ThreadLocalRandom.current().nextInt(min, max); j++) {
             list.add(elementToAdd);
         }
+        list.forEach(System.out::println);
+        System.out.println("-----------");
     }
 }

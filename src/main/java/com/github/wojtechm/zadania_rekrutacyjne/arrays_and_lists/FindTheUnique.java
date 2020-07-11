@@ -1,15 +1,13 @@
 package com.github.wojtechm.zadania_rekrutacyjne.arrays_and_lists;
 
-import com.fasterxml.jackson.core.json.async.NonBlockingJsonParser;
 import com.github.wojtechm.zadania_rekrutacyjne.tools.Difficulty;
 import com.github.wojtechm.zadania_rekrutacyjne.tools.Level;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Given a list of some elements
- * write a method that will find unique element.
+ * write a method that will find unique element ---> between others the same <---.
  * For edge case handing see provided tests.
  *
  * [1, 1, 2, 1, 1]  => 2
@@ -27,15 +25,18 @@ class FindTheUnique {
     static <T extends Comparable<T>> T findUnique(List<T> list) {
         if (list == null) throw new IllegalArgumentException();
         if (list.size() == 2) throw new IllegalArgumentException();
-        Comparator<T> comparator = Comparator.nullsFirst(T::compareTo);
-        list.sort(comparator);
-        for (var i = 0; i < list.size() - 2; i++) {
-            if (equalsWithNull(list.get(i), list.get(i + 1)) &&
-                    !equalsWithNull(list.get(i), list.get(i + 2))) return list.get(i + 2);
-            if (equalsWithNull(list.get(i + 1), list.get(i + 2)) &&
-                    !equalsWithNull(list.get(i + 1), list.get(i))) return list.get(i);
-            if (equalsWithNull(list.get(i + 2), list.get(i)) &&
-                    !equalsWithNull(list.get(i + 2), list.get(i + 1))) return list.get(i + 1);
+        Object notUnique = null;
+        for (var i = 0; i < list.size(); i++) {
+            if (equalsWithNull(list.get(i), list.get(i + 1)) ||
+                    equalsWithNull(list.get(i), list.get(i + 2)) ) {
+                notUnique = list.get(i);
+                break;
+            }
+        }
+        for (T t : list) {
+            if (!equalsWithNull(t, notUnique)) {
+                return t;
+            }
         }
         return null;
     }

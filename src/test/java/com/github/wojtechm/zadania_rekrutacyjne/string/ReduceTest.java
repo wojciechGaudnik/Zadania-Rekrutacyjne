@@ -3,6 +3,8 @@ package com.github.wojtechm.zadania_rekrutacyjne.string;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.stream.IntStream;
+
 import static org.testng.Assert.assertEquals;
 
 public class ReduceTest {
@@ -56,10 +58,13 @@ public class ReduceTest {
 
     @Test(dataProvider = "stringsThatShouldBeReducedMultipleTimes")
     private void should_returnFullyReducedString_when_multipleReductionsRequired(String toReduce, String expected) {
-        // act
-        String actual = Reduce.reduce(toReduce);
-        // assert
-        assertEquals(actual, expected);
+        for (var i : IntStream.range(0, 10000000).toArray()) {
+            // act
+            String actual = Reduce.reduce(toReduce);
+            // assert
+            assertEquals(actual, expected);
+        }
+
     }
 
     @DataProvider
@@ -71,7 +76,10 @@ public class ReduceTest {
                 {"abcddcba", ""},
                 {"fabcddcbaz", "fz"},
                 {"wo11od", "wd"},
-                {"xwoowabbax", ""}
+                {"xwoowabbax", ""},
+                {"xxwoowabxwoowabxwoowabxwoowaxwoowabbaxbbaxbaxbaxbaxwoxwoxwoxwoowabbaxowabbxwoowabbaxaxowabbaxowabxwoxwoowabbaxowabxwoowabbxwoowaxwoowabbaxxwxwoowabbaxoowabbaxbbaxaxbaxbax", ""},
+                {"xxasxwoowabbaxxwoowabbaxxwoowabbax", "as"},
+                {"lxwoowabbaxxwoowabbaxxwoowabbaxxwoowabbaxxwoowabbaxxwoowabbaxl", ""}
         };
     }
 }

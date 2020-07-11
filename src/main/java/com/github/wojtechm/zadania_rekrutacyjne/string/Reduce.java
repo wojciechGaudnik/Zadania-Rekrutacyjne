@@ -2,6 +2,12 @@ package com.github.wojtechm.zadania_rekrutacyjne.string;
 
 import com.github.wojtechm.zadania_rekrutacyjne.tools.Difficulty;
 import com.github.wojtechm.zadania_rekrutacyjne.tools.Level;
+import org.yaml.snakeyaml.util.ArrayStack;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * Given a String consisting of alphabetic characters only,
@@ -19,23 +25,67 @@ import com.github.wojtechm.zadania_rekrutacyjne.tools.Level;
 @Difficulty(Level.MEDIUM)
 class Reduce {
 
+    private static final String MESSAGE = "Cannot reduce null";
+
     private Reduce(){}
 
-    static String reduce(String toReduce) {
-        if(toReduce == null) throw new IllegalArgumentException("Cannot reduce null");
-        var marker = '1';
-        char[] toReduceArray = toReduce.toCharArray();
-        for (int i = 0; i < toReduceArray.length; i++) {
-            var j = 1;
-            while (i >= 0 &&
-                    toReduceArray[i] != marker &&
-                    i + j < toReduceArray.length &&
-                    toReduceArray[i] == toReduceArray[i + j]) {
-                toReduceArray[i] = marker;
-                toReduceArray[i-- + j] = marker;
-                j += 2;
+    static String reduce3(String toReduce) {    //todo tests 19 356 ms
+        if(toReduce == null) throw new IllegalArgumentException(MESSAGE);
+        Deque<Character> stack = new LinkedList<>();
+
+        for (var c : toReduce.toCharArray()) {
+            if (!stack.isEmpty() && c == stack.peek()) {
+                stack.pop();
+            } else {
+                stack.push(c);
             }
         }
-        return String.copyValueOf(toReduceArray).replace("1", "");
+
+        return new StringBuilder(stack.stream().map(String::valueOf).collect(Collectors.joining())).reverse().toString();
+    }
+
+    static String reduce2(String toReduce) {     //todo tests 19 728 ms
+        if(toReduce == null) throw new IllegalArgumentException(MESSAGE);
+        var stack = new ArrayStack<Character>(toReduce.length());
+
+        for (var c : toReduce.toCharArray()) {
+            if (stack.isEmpty()) {
+                stack.push(c);
+            } else {
+                var top = stack.pop();
+                if (top != c) {
+                    stack.push(top);
+                    stack.push(c);
+                }
+            }
+        }
+        var answer = new StringBuilder();
+        while (!stack.isEmpty()) {
+            answer.insert(0, stack.pop());
+        }
+        return answer.toString();
+    }
+
+    static String reduce(String toReduce) {     //todo tests 28 218 ms
+        if(toReduce == null) throw new IllegalArgumentException(MESSAGE);
+        var stack = new Stack<Character>();
+
+//        Synchronized classes Vector, Hashtable, Stack and StringBuffer should not be used
+//        java:S1149
+//        Early classes of the Java API, such as Vector, Hashtable and StringBuffer, were synchronized to make them thread-safe. Unfortunately, synchronization has a big negative impact on performance, even when using these collections from a single thread.
+//        It is better to use their new unsynchronized replacements:
+//        ArrayList or LinkedList instead of Vector
+//        Deque instead of Stack
+//        HashMap instead of Hashtable
+//        StringBuilder instead of StringBuffer
+
+        for (var c : toReduce.toCharArray()) {
+            if (!stack.isEmpty() && c == stack.peek()) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.stream().map(String::valueOf).collect(Collectors.joining());
     }
 }
